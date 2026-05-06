@@ -18,6 +18,9 @@ namespace DataAccessLayer.Interfaces
             this._context = context;
         }
 
+        public IQueryable<Car> Cars => _context.Cars;
+        public IQueryable<Seller> Sellers => _context.Sellers;
+
         public async Task<IEnumerable<Car>> GetCarAsync()
         {
             return await _context.Cars.ToListAsync();
@@ -51,6 +54,7 @@ namespace DataAccessLayer.Interfaces
                 existingCar.Trim = car.Trim;
                 existingCar.Mileage = car.Mileage;
                 existingCar.Price = car.Price;
+                existingCar.Seller = car.Seller;
                 await _context.SaveChangesAsync();
             }
             else
@@ -61,12 +65,23 @@ namespace DataAccessLayer.Interfaces
 
         public async Task DeleteCarAsync(int id)
         {
-            var car = await _context.Cars.FindAsync(id);
+            var car = await _context.Cars.Include(c=> c.Seller).FirstOrDefaultAsync(c => c.Id == id);
             if(car != null)
             {
-                car.IsDeleted = true;
+                _context.Cars.Remove(car);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<Seller>> GetSellersAsync()
+        {
+            return await _context.Sellers.ToListAsync();
+        }
+
+        public async Task AddSellerAsync(Seller seller)
+        {
+            await _context.Sellers.AddAsync(seller);
+            await _context.SaveChangesAsync();
         }
     }
 }

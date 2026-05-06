@@ -15,5 +15,9 @@ namespace BusinessLogicLayer
         Task GetDetailsAsync(Car car);
         Task UpdateCarAsync(Car car);
         Task DeleteCarAsync(int id);
+
+        List<CarSellerViewModel> GetCarsWithSellers();
+        Task<IEnumerable<Seller>> GetSellersAsync();
+        Task AddSellerAsync(Seller seller);
     }
 }

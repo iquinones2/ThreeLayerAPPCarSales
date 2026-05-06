@@ -9,5 +9,6 @@
         public string Trim { get; set; }
         public int Mileage { get; set; }
         public double Price { get; set; }
+
     }
 }

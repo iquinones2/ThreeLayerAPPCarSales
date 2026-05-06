@@ -15,5 +15,10 @@ namespace DataAccessLayer.Interfaces
         Task GetDetailsAsync(Car car);
         Task UpdateCarAsync(Car car);
         Task DeleteCarAsync(int id);
+
+        IQueryable<Car> Cars { get; }
+        IQueryable<Seller> Sellers { get; }
+        Task<IEnumerable<Seller>> GetSellersAsync();
+        Task AddSellerAsync(Seller seller);
     }
 }

@@ -14,5 +14,7 @@ namespace DataAccessLayer.Data
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Car> Cars { get; set; }
+
+        public DbSet<Seller> Sellers { get; set;}
     }
 }

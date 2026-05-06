@@ -3,6 +3,7 @@ using DataAccessLayer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260505221157_AddSellerTable")]
+    partial class AddSellerTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,24 +94,6 @@ namespace DataAccessLayer.Migrations
                     b.HasKey("SellerId");
 
                     b.ToTable("Sellers");
-
-                    b.HasData(
-                        new
-                        {
-                            SellerId = 1,
-                            Email = "john@cars.com",
-                            FirstName = "John",
-                            LastName = "Smith",
-                            PhoneNumber = "555-1234"
-                        },
-                        new
-                        {
-                            SellerId = 2,
-                            Email = "maria@cars.com",
-                            FirstName = "Maria",
-                            LastName = "Lopez",
-                            PhoneNumber = "555-5678"
-                        });
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Car", b =>

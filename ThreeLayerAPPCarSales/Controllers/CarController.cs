@@ -1,6 +1,7 @@
 ﻿using BusinessLogicLayer;
 using DataAccessLayer.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.Elfie.Diagnostics;
 using ThreeLayerAPPCarSales.Models;
 
@@ -21,8 +22,11 @@ namespace ThreeLayerAPPCarSales.Controllers
             return View(car);
         }
 
-        public IActionResult Create()
+        [HttpGet]
+        public async Task<IActionResult> Create()
         {
+            var sellers = await carService.GetSellersAsync();
+            ViewBag.SellerId = new SelectList(sellers, "SellerId", "LastName");
             return View();
         }
 
@@ -38,26 +42,32 @@ namespace ThreeLayerAPPCarSales.Controllers
                 Trim = carmodel.Trim,
                 Mileage = carmodel.Mileage,
                 Price = carmodel.Price,
+                SellerId = carmodel.SellerId,
             };
             await carService.AddCarAsync(car);
             return RedirectToAction("Index");
         }
 
-        public async Task<IActionResult>Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var car = await carService.GetCarByIdAsync(id);
             return View(car);
         }
 
-        public async Task<IActionResult>Edit(int id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
             var car = await carService.GetCarByIdAsync(id);
+            var sellers = await carService.GetSellersAsync();
+            ViewBag.SellerId = new SelectList(sellers, "SellerId", "LastName", car.SellerId);
             return View(car);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(Car editedCar)
         {
+            ModelState.Remove("Seller");
+
             if (ModelState.IsValid)
             {
                 var car = new Car()
@@ -69,27 +79,40 @@ namespace ThreeLayerAPPCarSales.Controllers
                     Trim = editedCar.Trim,
                     Mileage = editedCar.Mileage,
                     Price = editedCar.Price,
+                    SellerId = editedCar.SellerId,
                 };
-                await carService.AddCarAsync(car);
+                await carService.UpdateCarAsync(car);
                 return RedirectToAction("Index");
             }
             else
             {
+                var sellers = await carService.GetSellersAsync();
+                ViewBag.SellerId = new SelectList(sellers, "SellerId",
+                                    "LastName", editedCar.SellerId);
                 return View(editedCar);
             }
         }
 
-        public async Task<IActionResult>Delete(int id)
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
         {
             var car = await carService.GetCarByIdAsync(id);
             return View(car);
         }
 
         [HttpPost]
+        [ActionName("Delete")]
         public async Task<IActionResult> Delete(Car car)
         {
             await carService.DeleteCarAsync(car.Id);
-            return RedirectToAction("Index");   
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult CarSellerList()
+        {
+            List<CarSellerViewModel> result = carService.GetCarsWithSellers();
+            return View(result);
         }
     }
 }

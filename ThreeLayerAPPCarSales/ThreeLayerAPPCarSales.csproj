@@ -20,4 +20,8 @@
     <ProjectReference Include="..\BusinessLogicLayer\BusinessLogicLayer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SQL Scripts\" />
+  </ItemGroup>
+
 </Project>
